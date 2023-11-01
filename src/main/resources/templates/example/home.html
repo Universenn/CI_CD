@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간단한 게시판</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-3">간단한 게시판</h1>
+    <button id="add-button" class="btn btn-primary mb-3">게시물 추가</button>
+    <ul id="post-list" class="list-group">
+        <!-- 게시물 목록은 여기서 동적으로 생성됩니다 -->
+    </ul>
+</div>
+
+<div id="edit-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-modal-title">게시물 추가</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form">
+                    <div class="form-group">
+                        <label for="edit-title">제목</label>
+                        <input type="text" class="form-control" id="edit-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-content">내용</label>
+                        <textarea class="form-control" id="edit-content" rows="3" required></textarea>
+                    </div>
+                    <input type="hidden" id="edit-id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="save-button">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_ENDPOINT = 'http://localhost:8080/api/v1/boards'; // 실제 백엔드 API 주소로 변경
+    const addButton = document.getElementById('add-button');
+    const postList = document.getElementById('post-list');
+    const editModal = document.getElementById('edit-modal');
+    const editTitleInput = document.getElementById('edit-title');
+    const editContentInput = document.getElementById('edit-content');
+    const editIdInput = document.getElementById('edit-id');
+    const saveButton = document.getElementById('save-button');
+
+    addButton.addEventListener('click', () => {
+        editIdInput.value = '';
+        editTitleInput.value = '';
+        editContentInput.value = '';
+        editModal.dataset.mode = 'add';
+        editModal.modal('show');
+    });
+
+    saveButton.addEventListener('click', () => {
+        const mode = editModal.dataset.mode;
+        const id = editIdInput.value;
+        const title = editTitleInput.value;
+        const content = editContentInput.value;
+
+        if (mode === 'add') {
+            fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, content }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 새로운 게시물 추가 처리
+                })
+                .catch(error => {
+                    console.error('Error adding post:', error);
+                });
+        } else if (mode === 'edit') {
+            fetch(`${API_ENDPOINT}/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, content }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 게시물 수정 처리
+                })
+                .catch(error => {
+                    console.error('Error editing post:', error);
+                });
+        }
+
+        // 저장 후에는 모달을 닫습니다.
+        editModal.modal('hide');
+    });
+
+    function editPost(button) {
+        const content = button.parentElement.textContent.trim();
+        const separatorIndex = content.indexOf(':');
+        const title = content.substring(0, separatorIndex);
+        const initialContent = content.substring(separatorIndex + 1);
+        const id = button.getAttribute('data-id');
+
+        editIdInput.value = id;
+        editTitleInput.value = title;
+        editContentInput.value = initialContent;
+        editModal.dataset.mode = 'edit';
+        editModal.modal('show');
+    }
+
+    function deletePost(button) {
+        const id = button.getAttribute('data-id');
+        // 프론트엔드에서 서버로의 요청 (Ajax 등)을 추가해야 합니다.
+        // API 엔드포인트로 DELETE 요청을 보내 게시물을 삭제합니다.
+        // 이 부분은 백엔드와 연동하는 로직입니다.
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
