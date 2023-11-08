@@ -13,21 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Docker pas
+    - name: Docker pa
       run: docker ps -a
     # - uses: actions/checkout@v3
-    # - name: Docker stop
-    #   run: docker stop juwan-project
-    # - name: Docker rm
-    #   run: docker rm juwan-project
-    # - name: Docker rmi
-    #   run: docker rmi juwan
-    # - name: CD diriectory
-    #   run: cd CI_CD
-    # - name: Git pull
-    #   run: git pull
-    # - name: docker build
-    #   run: docker build -t juwan
-    # - name: docker run
-    #   run: docker run -p 8080:8080 -d --name juwan-project -e ${{ secrets.SPRING_DATASOURCE_URL }} -e ${{ secrets.SPRING_DATASOURCE_PASSWORD }} juwan
+    - name: Docker stop
+      run: docker stop juwan-project
+    - name: Docker rm
+      run: docker rm juwan-project
+    - name: Docker rmi
+      run: docker rmi juwan
+    - name: CD diriectory
+      run: cd CI_CD
+    - name: Git pull
+      run: git pull
+    - name: docker build
+      run: docker build -t juwan .
+    - name: docker run
+      run: docker run -p 8080:8080 -d --name juwan-project -e ${{ secrets.SPRING_DATASOURCE_URL }} -e ${{ secrets.SPRING_DATASOURCE_PASSWORD }} juwan
       
