@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Sudo su -
+      run: sudo su -
     - name: Docker pa
       run: docker ps -a
     # - uses: actions/checkout@v3
